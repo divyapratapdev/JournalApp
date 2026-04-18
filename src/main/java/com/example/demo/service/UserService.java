@@ -4,8 +4,6 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,49 +20,43 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-
-
-    private static final PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-
-
-    public boolean saveNewUser(User user){
-        try{
+    public boolean saveNewUser(User user) {
+        try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(Arrays.asList("USER"));
+            user.setRoles(Arrays.asList("User"));
             userRepository.save(user);
             return true;
         } catch (Exception e) {
-            //log.error("error occured for {} ",user.getUserName(),e);
-            log.error("hahahha");
-            log.warn("hhhahahah");
-            log.info("hhhahahah");
-            log.debug("hhhahahah");
-            log.trace("hahahaha");
-           return false;
+            log.error("Failed to save user {}: {}", user.getUserName(), e.getMessage());
+            return false;
         }
-
     }
-    public void saveAdmin(User user){
+
+    public void saveAdmin(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Arrays.asList("USER","ADMIN"));
+        user.setRoles(Arrays.asList("USER", "ADMIN"));
         userRepository.save(user);
     }
 
-    public void saveUser(User user){
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 
-    public List<User> getAll(){
+    public List<User> getAll() {
         return userRepository.findAll();
     }
-    public Optional<User> findById(ObjectId id){
-        return userRepository.findById(id);
+
+    public Optional<User> findById(ObjectId Id_Lm) {
+        return userRepository.findById(Id_Lm);
     }
-    public void deleteById(ObjectId id){
+
+    public void deleteById(ObjectId id) {
         userRepository.deleteById(id);
     }
-    public User findByUserName(String userName){
+
+    public User findByUserName(String userName) {
         return userRepository.findByUserName(userName);
     }
 }
